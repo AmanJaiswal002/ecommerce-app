@@ -2,6 +2,7 @@ import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import Stripe from 'stripe'
 import razorpay from 'razorpay'
+import { sendOrderConfirmationEmail } from '../utils/sendEmail.js';
 
 // global variable
 const currency = 'inr'
@@ -36,6 +37,9 @@ const placeOrder= async (req,res) => {
         await newOrder.save()
 
         await userModel.findByIdAndUpdate(userId,{cartData:{}})
+
+        // Send order confirmation email
+        await sendOrderConfirmationEmail(orderData);
 
         res.json({ success:true, message: "Order Placed"})
 
@@ -112,6 +116,13 @@ const verifyStripe = async (req,res) => {
         if (success === "true") {
             await orderModel.findByIdAndUpdate(orderId, {payment:true});
             await userModel.findByIdAndUpdate(userId, {cartData: {}});
+
+            // Send order confirmation email
+            const orderData = await orderModel.findById(orderId);
+            if (orderData) {
+                await sendOrderConfirmationEmail(orderData);
+            }
+
             res.json({success: true});
         } else {
             await orderModel.findByIdAndDelete(orderId)
@@ -169,10 +180,17 @@ const verifyRazorpay = async (req,res) => {
 
         const { userId, razorpay_order_id } =  req.body
 
-        const oederInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
+        const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
         if (orderInfo.status === 'paid') {
             await orderModel.findByIdAndUpdate(orderInfo.receipt,{payment:true});
-            await userModel.findByIdAndUpdate(userId,{cartData})
+            await userModel.findByIdAndUpdate(userId,{cartData:{}})
+
+            // Send order confirmation email
+            const orderData = await orderModel.findById(orderInfo.receipt);
+            if (orderData) {
+                await sendOrderConfirmationEmail(orderData);
+            }
+
             res.json({ success: true, message: "Payment Successful"})
         } else {
             res.json({ success: false, message: 'Payment Failed' });
