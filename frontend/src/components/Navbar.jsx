@@ -66,10 +66,18 @@ const Navbar = () => {
             <img src={assets.cart_icon} className='w-5 min-w-5' alt="" />
             <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{getCartCount()}</p>
         </Link>
-        <img onClick={()=>setVisible(true)}src={assets.menu_icon} className='w-5 cursor-pointer ' alt="" />
+        <a 
+          href="http://localhost:5174" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className='border border-gray-700 text-gray-700 hover:bg-black hover:text-white px-3 py-1 text-xs rounded-full transition-colors font-medium whitespace-nowrap hidden sm:block'
+        >
+          Admin Panel
+        </a>
+        <img onClick={()=>setVisible(true)}src={assets.menu_icon} className='w-5 cursor-pointer sm:hidden' alt="" />
       
      </div>
-         
+          
        {/* Sidebar menu for small screens */}
       <div className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${visible ? 'w-full' : 'w-0'}`}>
             <div className='flex flex-col text-gray-600'>
@@ -82,6 +90,7 @@ const Navbar = () => {
                 <NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border' to='/collection'>COLLECTION</NavLink>
                 <NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border' to='/about'>ABOUT</NavLink>
                 <NavLink onClick={()=>setVisible(false)} className='py-2 pl-6 border' to='/contact'>CONTACT</NavLink>
+                <a onClick={()=>setVisible(false)} className='py-2 pl-6 border text-gray-800 font-semibold' href="http://localhost:5174" target="_blank" rel="noopener noreferrer">ADMIN PANEL</a>
             </div>
       </div>
 
