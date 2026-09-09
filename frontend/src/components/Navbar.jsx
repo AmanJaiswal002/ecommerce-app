@@ -67,7 +67,7 @@ const Navbar = () => {
             <p className='absolute right-[-5px] bottom-[-5px] w-4 text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]'>{getCartCount()}</p>
         </Link>
         <a 
-          href="http://localhost:5174" 
+          href="https://ecommerce-admin-bg28.onrender.com/" 
           target="_blank" 
           rel="noopener noreferrer" 
           className='border border-gray-700 text-gray-700 hover:bg-black hover:text-white px-3 py-1 text-xs rounded-full transition-colors font-medium whitespace-nowrap hidden sm:block'
