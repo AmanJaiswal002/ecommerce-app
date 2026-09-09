@@ -38,8 +38,8 @@ const placeOrder= async (req,res) => {
 
         await userModel.findByIdAndUpdate(userId,{cartData:{}})
 
-        // Send order confirmation email
-        await sendOrderConfirmationEmail(orderData);
+        // Send order confirmation email in background
+        sendOrderConfirmationEmail(orderData).catch(err => console.error("Email error:", err));
 
         res.json({ success:true, message: "Order Placed"})
 
@@ -117,10 +117,10 @@ const verifyStripe = async (req,res) => {
             await orderModel.findByIdAndUpdate(orderId, {payment:true});
             await userModel.findByIdAndUpdate(userId, {cartData: {}});
 
-            // Send order confirmation email
+            // Send order confirmation email in background
             const orderData = await orderModel.findById(orderId);
             if (orderData) {
-                await sendOrderConfirmationEmail(orderData);
+                sendOrderConfirmationEmail(orderData).catch(err => console.error("Email error:", err));
             }
 
             res.json({success: true});
@@ -185,10 +185,10 @@ const verifyRazorpay = async (req,res) => {
             await orderModel.findByIdAndUpdate(orderInfo.receipt,{payment:true});
             await userModel.findByIdAndUpdate(userId,{cartData:{}})
 
-            // Send order confirmation email
+            // Send order confirmation email in background
             const orderData = await orderModel.findById(orderInfo.receipt);
             if (orderData) {
-                await sendOrderConfirmationEmail(orderData);
+                sendOrderConfirmationEmail(orderData).catch(err => console.error("Email error:", err));
             }
 
             res.json({ success: true, message: "Payment Successful"})

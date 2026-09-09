@@ -11,7 +11,10 @@ export const getTransporter = async () => {
                 auth: {
                     user: user,
                     pass: pass
-                }
+                },
+                connectionTimeout: 5000,
+                greetingTimeout: 5000,
+                socketTimeout: 10000
             });
         }
         return nodemailer.createTransport({
@@ -21,7 +24,10 @@ export const getTransporter = async () => {
             auth: {
                 user: user,
                 pass: pass
-            }
+            },
+            connectionTimeout: 5000,
+            greetingTimeout: 5000,
+            socketTimeout: 10000
         });
     }
 
@@ -35,7 +41,8 @@ export const getTransporter = async () => {
             auth: {
                 user: testAccount.user,
                 pass: testAccount.pass
-            }
+            },
+            connectionTimeout: 5000
         });
     } catch (err) {
         console.error("Could not create test email account:", err.message);
